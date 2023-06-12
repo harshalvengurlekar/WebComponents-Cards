@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card-grid">
+  <card-element
+    image-src="https://images.unsplash.com/source-404?fit=crop&fm=jpg&h=700&q=800&w=1200"
+    title="Card Title"
+    body="This is the card content. It can include any HTML elements."
+  ></card-element>
+
+  <card-element
+    image-src="https://images.unsplash.com/source-404?fit=crop&fm=jpg&h=700&q=800&w=1200"
+    title="Another Card Title"
+    body="This is another card. It has a different image and content."
+  ></card-element>
+</div>
+
+<script>
+  class CardElement extends HTMLElement {
+    constructor() {
+      super();
+      const shadow = this.attachShadow({ mode: 'open' });
+
+      // Create a container for the card
+      const cardContainer = document.createElement('div');
+      cardContainer.classList.add('card');
+
+      // Get the attributes for image source, title, and body
+      const imageSrc = this.getAttribute('image-src');
+      const title = this.getAttribute('title');
+      const body = this.getAttribute('body');
+
+      // Create the card header
+      const cardHeader = document.createElement('div');
+      cardHeader.classList.add('card-header');
+      cardHeader.textContent = title;
+
+      // Create the card body
+      const cardBody = document.createElement('div');
+      cardBody.classList.add('card-body');
+
+      // Create the card image
+      const cardImage = document.createElement('div');
+      cardImage.classList.add('card-image');
+      cardImage.style.backgroundImage = `url(${imageSrc})`;
+
+      // Create the card content
+      const cardContent = document.createElement('div');
+      cardContent.classList.add('card-content');
+      cardContent.innerHTML = body;
+
+      // Append the header, image, and content to the card body
+      cardBody.appendChild(cardImage);
+      cardBody.appendChild(cardContent);
+
+      // Append the header and body to the card container
+      cardContainer.appendChild(cardHeader);
+      cardContainer.appendChild(cardBody);
+
+      // Append the card container to the shadow DOM
+      shadow.appendChild(cardContainer);
+
+      // Apply CSS styles to the shadow DOM
+      const style = document.createElement('style');
+      style.textContent = `
+        .card {
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+        }
+        .card-header {
+          font-weight: bold;
+          padding: 10px;
+          background-color: #f0f0f0;
+        }
+        .card-body {
+          display: flex;
+        }
+        .card-image {
+          width: 60%;
+          background-size: cover;
+          background-position: center;
+        }
+        .card-content {
+          flex: 1;
+          padding: 10px;
+        }
+      `;
+      shadow.appendChild(style);
+    }
+  }
+
+  // Define the custom element
+  customElements.define('card-element', CardElement);
+</script>
+
+</body>
+</html>
